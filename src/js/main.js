@@ -117,7 +117,8 @@ var game = (function(){
           player.h+2
         );
 
-        ctx.fillRect(
+        ctx.drawImage(
+          playerImage,
           player.x = (player.x + player.speed),
           player.y,
           player.w,
