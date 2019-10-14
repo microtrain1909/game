@@ -11,3 +11,6 @@ canvas {
   font-size: 25px;
   font-family: 'Mansalva', cursive;
   color: #fff; }
+
+.sources {
+  display: none; }

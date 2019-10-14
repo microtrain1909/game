@@ -1,7 +1,7 @@
 var game = (function(){
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
-  
+
     var player = {
       x:0,
       y:475,
@@ -11,7 +11,7 @@ var game = (function(){
       dir: 'right',
       speed: 5
     }
-  
+
     var spawn = {
       x: 50,
       y: 0,
@@ -20,28 +20,30 @@ var game = (function(){
       fill: '#ff0',
       speed: 5
     }
-  
+
     var spawns = {}
-  
+
     var spawner = null;
-  
+
     var animation  = null;
-  
+
     var gameOver = false;
-  
+
     var score = 0;
-  
-  
+
+    var playerImage = document.getElementById('playerSource');
+
+
     function launchSpawns(){
       spawner = setInterval(()=>{
         //Use psuedo-random strings to name the new spawns
         var text = "";
         var possible = "abcdefghijklmnopqrstuvwxyz";
-  
+
         for (var i = 0; i < 10; i++){
           text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
-  
+
         spawns[text] = {
           x:Math.floor(Math.random()*canvas.width),
           y:spawn.y,
@@ -50,39 +52,39 @@ var game = (function(){
           fill:spawn.fill,
           speed:5,
         }
-  
+
       },400);
     }
-  
+
     function moveSpawns(){
-  
+
       if(Object.keys(spawns).length>0){
         for(let spawn in spawns){
-  
+
           if(spawns[spawn].y<=canvas.height){
-  
-  
+
+
             ctx.fillStyle = spawns[spawn].fill;
-  
-  
+
+
             ctx.save();
-  
+
             ctx.clearRect(
               spawns[spawn].x-1,
               spawns[spawn].y-spawns[spawn].speed,
               spawns[spawn].w+2,
               spawns[spawn].h+2
             );
-  
+
             ctx.fillRect(
               spawns[spawn].x,
               spawns[spawn].y = (spawns[spawn].y+spawns[spawn].speed),
               spawns[spawn].w,
               spawns[spawn].h
             );
-  
+
             ctx.restore();
-  
+
             if (
               player.x < spawns[spawn].x + spawns[spawn].w &&
               spawns[spawn].x > player.x && spawns[spawn].x < (player.x + player.w) &&
@@ -93,7 +95,7 @@ var game = (function(){
               cancelAnimationFrame(animation);
               clearInterval(spawner);
             }
-  
+
           }else{
             score = score + 10;
             document.getElementById('score').innerHTML = score;
@@ -102,52 +104,71 @@ var game = (function(){
         }
       }
     }
-  
+
     function movePlayer(){
       ctx.fillStyle=player.fill;
-  
+
       if(player.dir === 'right'){
-  
+
         ctx.clearRect(
           player.x-player.speed,
           player.y-1,
           player.w+2,
           player.h+2
         );
-  
+
+        /*
         ctx.fillRect(
           player.x = (player.x + player.speed),
           player.y,
           player.w,
           player.h
+        );*/
+
+        ctx.drawImage(
+          playerImage,
+          player.x = (player.x + player.speed),
+          player.y,
+          player.w,
+          player.h
         );
-  
+
+
         if((player.x + player.w) >= canvas.width){
           player.dir = 'left';
         }
-  
+
       }else{
-  
+
         ctx.clearRect(
           player.x+player.speed,
           player.y-1,
           player.w+2,
           player.h+2
         );
-  
-        ctx.fillRect(
+
+
+        /*ctx.fillRect(
+          player.x = (player.x - player.speed),
+          player.y,
+          player.w,
+          player.h
+        );*/
+
+        ctx.drawImage(
+          playerImage,
           player.x = (player.x - player.speed),
           player.y,
           player.w,
           player.h
         );
-  
+
         if(player.x <= 0){
           player.dir = 'right';
         }
       }
     }
-  
+
     function animate(){
       movePlayer();
       moveSpawns();
@@ -155,9 +176,9 @@ var game = (function(){
         animation = window.requestAnimationFrame(animate.bind(animation));
       }
     }
-  
+
     return {
-  
+
       changeDirection: function(){
         if(player.dir === 'left'){
           player.dir = 'right';
@@ -165,19 +186,19 @@ var game = (function(){
           player.dir = 'left';
         }
       },
-  
+
       init: function(){
         canvas.height = 600;
         canvas.width = 800;
-  
+
         launchSpawns();
         animate();
       }
     }
   })();
-  
+
   game.init();
-  
+
   window.addEventListener('keyup', function(){
     game.changeDirection();
   });

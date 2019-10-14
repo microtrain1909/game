@@ -1,7 +1,7 @@
 canvas {
     background: rgb(4, 23, 131);
   }
-  
+
   /* 4. Over lay the score on the top left corner of the canvas.*/
   #score {
     position: absolute;
@@ -13,3 +13,9 @@ canvas {
     font-family: 'Mansalva', cursive;
     color: #fff;
   }
+
+  .sources {
+    display: none;
+  }
+
+
